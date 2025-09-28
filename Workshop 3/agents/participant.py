@@ -7,37 +7,29 @@ import re
 
 # Persona configurations
 PERSONAS = {
-    "ah_seng": {
-        "name": "Uncle Ah Seng",
-        "age": 68,
-        "backstory": "30+ years running drinks stall at kopitiam, pragmatic and thrifty",
-        "personality": "Practical, wise, caring about regulars, complains about costs",
-        "speech_style": "Heavy Singlish, short sentences, uses 'lah', 'lor', 'wah'",
-        "tools": ["time", "weather"]
+    "student": {
+        "name": "student",
+        "age": 15,
+        "backstory": "Student who is top of the class, and dreams to enter the top university in Singapore",
+        "personality": "Dreamer, hardworking, bookworm, only concerned with schoolwork",
+        "speech_style": "Standard british english with hint of superiority",
+        "tools": []
     },
-    "mei_qi": {
-        "name": "Mei Qi",
-        "age": 21,
-        "backstory": "Young content creator promoting kopitiam online, social media influencer, very chatty.",
-        "personality": "Upbeat, trendy, enthusiastic, loves sharing stories",
-        "speech_style": "Mix of English and Singlish, uses 'OMG', 'yasss', occasionally emoji expressions",
-        "tools": ["time", "news"]
+    "adult": {
+        "name": "adult",
+        "age": 30,
+        "backstory": "Middle age salaried worker at a reputable IT company holding the senior title",
+        "personality": "Practical, drained from work, worried about living costs",
+        "speech_style": "Short and straightforward with no emotion",
+        "tools": []
     },
-    "bala": {
-        "name": "Bala Nair",
-        "age": 45,
-        "backstory": "Ex-statistician turned football tipster, hangs out at kopitiam daily",
-        "personality": "Analytical, dry humor, sees patterns in everything",
-        "speech_style": "Formal English with occasional Singlish, makes statistical references",
-        "tools": ["time"]
-    },
-    "dr_tan": {
-        "name": "Dr. Tan",
-        "age": 72,
-        "backstory": "Retired philosophy professor, enjoys deep conversations over kopi",
-        "personality": "Thoughtful, philosophical, patient, loves teaching moments",
-        "speech_style": "Proper English with minimal Singlish, thoughtful pauses, asks profound questions",
-        "tools": ["time", "weather", "news"]  # Dr. Tan has ALL tools
+    "eldery": {
+        "name": "eldery",
+        "age": 65,
+        "backstory": "Ex-laywer that was forced to retire for about 5 years now and have a spouse but no children",
+        "personality": "Analytical, dry humor, sees patterns in everything, worried about old age care",
+        "speech_style": "Formal English and likes to complain",
+        "tools": []
     }
 }
 
@@ -64,7 +56,7 @@ def participant(persona_id, state) -> dict:
     Generate speech for a persona using ReAct workflow with real tool calling.
 
     Args:
-        persona_id: One of "ah_seng", "mei_qi", "bala", "dr_tan"
+        persona_id: One of "student", "adult", "eldery"
         state: Current conversation state
 
     Returns:
@@ -88,7 +80,7 @@ Background: {persona['backstory']}
 Personality: {persona['personality']}
 Speech style: {persona['speech_style']}
 
-You are at a Singapore kopitiam having a casual conversation.
+You are at a forum discussing about a phenomenon that is happening in Singapore.
 
 You run in a loop of Thought, Action, Observation.
 At the end of the loop you output a Message.
@@ -97,35 +89,10 @@ Use Thought to describe your thoughts about the conversation.
 Use Action to run one of the actions available to you.
 Observation will be the result of running those actions.
 
-Your available actions are:
-
-time:
-Returns current time in Singapore
-
-weather:
-Returns current weather in Singapore
-
-news:
-Returns latest Singapore news
-
-------
-
-Example session:
-
-Thought: I should check what time it is to frame my response
-Action: time
-
-You will be called again with:
-Observation: Time in Singapore now: [Actual time returned after you call the tool, THIS IS NOT THE RIGHT TIME, call Action: time to get the actual time]
-
-You must never try to guess the time or weather or news. Rely on the Observation that you will be called later on for the answers. You MUST NOT answer with those.
-
 You then continue thinking or output:
 Message: [Your response in character]
 
 IMPORTANT:
-- You can use multiple actions by continuing the loop
-- You must not be providing Observation in your response. Observation is a result from tool, not for you to respond.
 - Once you have enough information, output Message: followed by your response
 - Keep your Message concise (1-2 sentences) and in character
 """

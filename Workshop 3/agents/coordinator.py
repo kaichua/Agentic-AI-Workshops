@@ -5,7 +5,7 @@ from utils import debug
 
 def coordinator(state):
     """
-    Select next speaker based on conversation context.
+    Select next speaker based on conversation context and ensure that every speaker has spoken at least once.
     Manages volley control and updates state accordingly.
 
     Updates state with:
@@ -33,29 +33,29 @@ def coordinator(state):
         # Messages are now always dicts
         conversation_text += f"{msg.get('content', '')}\n"
 
-    system_prompt = """You are managing a lively conversation at a Singapore kopitiam.
+    system_prompt = """You are managing a forum discussion between different age groups regarding phenomenon that is occurring in Singapore.
 
     Available speakers:
-    - ah_seng: Uncle Ah Seng, 68yo kopi uncle, speaks Singlish, knows about drinks and weather
-    - mei_qi: Young 21yo content creator, social media savvy, knows latest news and trends
-    - bala: Ex-statistician turned football tipster, dry humor, analytical
-    - dr_tan: Retired 72yo philosophy professor, thoughtful and deep thinker
+    - student: 15 year old student, top of their class, concerned about reaching his dream university
+    - adult: 30 year old salaried worker, engineer at a reputable IT company, concerned about cost of living
+    - eldery: 65 year old retiree, living with spouse with no children, concerned about increased medical conditions due to aging
 
-    Based on the conversation flow, select who should speak next to keep the conversation lively and natural.
+    Based on the conversation flow, select who should speak next to keep the conversation organized and related to the topic.
     Consider:
+    - Every speaker should have at least spoken once
     - Who hasn't spoken recently
-    - Who has relevant expertise for the current topic
-    - Most importantly, who would add interesting perspective
-    - Natural kopitiam banter flow
-    - mei_qi should speak more about social media and trends, and she gets a lot of news, so she's naturally excited.
+    - Whose age group would be able to relate to the highlighted issue better
+    - Most importantly, who is trying to provide a tangible solution to the issue 
+    - Natural forum discussion flow
+    - elderly should speak more as they have the most life experience
 
-    Respond with ONLY the speaker ID (ah_seng, mei_qi, bala, or dr_tan).
+    Respond with ONLY the speaker ID (student, adult, or eldery).
     """
 
     user_prompt = f"""Recent conversation:
 {conversation_text}
 
-Who should speak next to keep this kopitiam conversation lively?"""
+Who should speak next to keep this forum discussion on topic?"""
 
     debug("Analyzing conversation context...", "COORDINATOR")
 
@@ -76,7 +76,7 @@ Who should speak next to keep this kopitiam conversation lively?"""
         debug(f"LLM selected: {selected_speaker}", "COORDINATOR")
 
         # Validate speaker
-        valid_speakers = ["ah_seng", "mei_qi", "bala", "dr_tan"]
+        valid_speakers = ["student", "adult", "eldery"]
         if selected_speaker not in valid_speakers:
             # Fallback to round-robin if invalid
             import random
@@ -86,7 +86,7 @@ Who should speak next to keep this kopitiam conversation lively?"""
     except Exception as e:
         # Fallback selection if LLM fails
         import random
-        valid_speakers = ["ah_seng", "mei_qi", "bala", "dr_tan"]
+        valid_speakers = ["student", "adult", "eldery"]
         selected_speaker = random.choice(valid_speakers)
         debug(f"LLM error, random selection: {selected_speaker}", "COORDINATOR")
 

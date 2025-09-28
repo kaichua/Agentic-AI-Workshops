@@ -24,18 +24,46 @@ def build_graph():
 
     builder = StateGraph(State)
 
-    # TODO: Connect the graph
+    builder.add_node("human", human_node)
+    builder.add_node("coordinator", coordinator)  # Use coordinator directly
+    builder.add_node("participant", participant_node)
+    builder.add_node("summarizer", summarizer_node)
+
+    # Edges
+    builder.add_edge(START, "human")
+
+    builder.add_conditional_edges(
+        "human",
+        check_exit_condition,
+        {
+            "summarizer": "summarizer",
+            "coordinator": "coordinator"
+        }
+    )
+
+    builder.add_conditional_edges(
+        "coordinator",
+        coordinator_routing,
+        {
+            "participant": "participant",
+            "human": "human"
+        }
+    )
+
+    builder.add_edge("participant", "coordinator")
+
+    builder.add_edge("summarizer", END)
 
     return builder.compile()
 
 
 def main():
-    print("=== SINGAPORE KOPITIAM CHATTER ===")
-    print("Chat with our kopitiam regulars! Type 'exit' to end.\n")
-    print("Setting: A bustling Singapore kopitiam on a typical afternoon...")
-    print("The regulars are here - Uncle Ah Seng at his drinks stall,")
-    print("Mei Qi with her phone, Bala checking football scores,")
-    print("and Dr. Tan sipping his kopi-o.\n")
+    print("=== SINGAPORE FORUM DISCUSSION ===")
+    print("Chat with Singaporeans to know about their views! Type 'exit' to end.\n")
+    print("Setting: A forum discussion to talk about a phenomenon happening in Singapore...")
+    # print("The regulars are here - Uncle Ah Seng at his drinks stall,")
+    # print("Mei Qi with her phone, Bala checking football scores,")
+    # print("and Dr. Tan sipping his kopi-o.\n")
 
     graph = build_graph()
 

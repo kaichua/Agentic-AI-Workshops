@@ -27,7 +27,7 @@ def summarizer(state) -> str:
         return "No conversation content to summarize."
 
     # System prompt for summarization
-    system_prompt = """You are a keen observer at a Singapore kopitiam who has been listening to the conversation.
+    system_prompt = """You are a keen observer at a forum who has been listening to the conversation.
 
 Generate a concise summary of the conversation that captures:
 1. Key topics discussed
@@ -35,14 +35,14 @@ Generate a concise summary of the conversation that captures:
 3. Any memorable quotes or highlights
 4. The overall mood and flow of the conversation
 
-Format your summary in a clear, engaging way that captures the essence of kopitiam banter.
+Format your summary in a clear, engaging way that captures the essence of forum discussion.
 Keep it concise but insightful."""
 
     user_prompt = f"""Here's the conversation that took place:
 
 {conversation_text}
 
-Please provide a summary of this kopitiam conversation."""
+Please provide a summary of this forum discussion."""
 
     try:
         # Call LLM
@@ -59,11 +59,11 @@ Please provide a summary of this kopitiam conversation."""
             summary = str(response.content).strip()
 
         # Format with header
-        return f"=== KOPITIAM CONVERSATION SUMMARY ===\n\n{summary}"
+        return f"=== FORUM DISCUSSION SUMMARY ===\n\n{summary}"
 
     except Exception as e:
         # Fallback to basic summary if LLM fails
-        return f"""=== KOPITIAM CONVERSATION SUMMARY ===
+        return f"""=== FORUM DISCUSSION SUMMARY ===
 
 Total messages: {len(messages)}
 
